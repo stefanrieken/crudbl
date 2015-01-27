@@ -30,7 +30,8 @@ View = {
 			html += '<tr>';
 			var row = Db.get(tableName, table.ids[i]);
 			for (var key in table.ddl) {
-				html += '<td><a href="#" onclick="View.editDialog(\'' + tableName + '\',' + table.ids[i] + ')">' + row[key] + '</a></td>';
+				var value = table.ddl[key].display != 'select' ? row[key] : Db.get(table.ddl[key].type, table.ids[i]).name;
+				html += '<td><a href="#" onclick="View.editDialog(\'' + tableName + '\',' + table.ids[i] + ')">' + value + '</a></td>';
 			}
 			html += '</tr>';
 		}
@@ -68,15 +69,16 @@ View = {
 		return '<input type="text" name="' + name + '" value="' + value + '" />';
 	},
 
-	select : function (ddl, name)
+	select : function (ddl, name, value)
 	{
 		var table = Table.get(ddl.type);
 
 		var result = '<select name="' + name + '">';
 		for (var i in table.ids) {
 			var row = Db.get(ddl.type, table.ids[i]);
-			var value = ddl.displayName ? 'todo' : row.name;
-			result += '<option value="' + row.id + '">' + value +'</option>';
+			var thisValue = ddl.displayName ? 'todo' : row.name;
+			var selected = thisValue == value ? ' selected="true"' : '';
+			result += '<option value="' + row.id + '"' + selected + '>' + thisValue +'</option>';
 
 		}
 
