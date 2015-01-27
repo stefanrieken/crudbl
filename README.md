@@ -13,6 +13,8 @@ Next steps:
 
 - Adding CSS
 
+- Support for list data types
+
 - Packing for mobile use
 
 - Gamification api?
