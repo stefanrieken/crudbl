@@ -1,0 +1,33 @@
+<html>
+<head>
+    <title>CruDBl : CRUD dialog and DB by means of LocalStorage</title>
+    <meta charset="UTF-8" />
+    <script src="db.js"></script>
+    <script src="model.js"></script>
+    <script src="view.js"></script>
+    <script src="controller.js"></script>
+    <script>
+
+localStorage.clear();
+
+for (var i in model) {
+console.log("Putting " + i);
+	model[i].id = i;
+	Table.put(model[i]);
+}
+
+Db.put('contactType', {name : 'Home'});
+Db.put('contactType', {name : 'Office'});
+
+Db.put('infoType', {name : 'Phone'});
+Db.put('infoType', {name : 'Email'});
+
+document.addEventListener('DOMContentLoaded', function() {
+	View.overview();
+});
+
+    </script>
+</head>
+<body>
+</body>
+</html>
