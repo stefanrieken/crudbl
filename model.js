@@ -8,7 +8,8 @@ var model =
 		firstName : {name : "First name", type : "string", display : "entry" },
 		lastName :  {name : "Last name", type : "string", display : "entry" },
 		contactType : {name : "Contact type", type : "contactType", display : "select", editable : "false" },
-		infos : {name : "Info data", type : "infolist", display : "locallist"}
+		infos : {name : "Info data", type : "infolist", display : "locallist"},
+		companies : {name : "Companies", type : "companylist", display : "globallist"}
 	},
 	displayName : "{lastName}, {firstName}" // doesn't do anything yet
     },
@@ -38,6 +39,14 @@ var model =
 	{
 		name : {name : "name", type : "string", display : "entry" }
 	}
-    }
+    },
+    "company" :
+    {
+	names : ["Company", "Companies", "Companies"],
+	ddl :
+	{
+		name : {name : "name", type : "string", display : "entry"}
+	}
+    },
 };
 
