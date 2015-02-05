@@ -1,3 +1,63 @@
+/* limit size to likely mobile phone resolution */
+
+#menu, table {
+	width: 100%;
+	max-width: 480px;
+}
+
+/* uniform size of rows and buttons */
+
+a.button {
+	width: 36px;
+}
+
+a.button, td div, th div {
+	line-height: 36px;
+	min-height: 36px;
+}
+
+#menu a {
+	height: 40px;
+	line-height: 40px;
+}
+
+input, select {
+	margin-top: 6px;
+}
+
+td div, th div {
+	border-top: solid 2px white;
+	border-bottom: solid 2px white;
+}
+
+/* relative paddings and margins */
+
+td div, th div {
+	padding-left: 5px;
+}
+
+a.left {
+	float: left;
+	margin-left: -5px;
+	margin-right: 5px;
+}
+
+/* menu */
+
+#menu {
+	position: absolute;
+}
+
+#menu a {
+	display: block;
+	background-color: black;
+	color: white;
+	text-align: center;
+	font-weight: bold;
+}
+
+/* other */
+
 a {
 	text-decoration: none;
 	color: black;
@@ -5,26 +65,22 @@ a {
 
 a.button {
 	float: right;
-	width: 26px;
-	height: 26px;
-	line-height: 26px;
 	text-align: center;
 	vertical-align: middle;
 	background: black;
 	color: white;
-	text-decoration: none;
 	font-weight: bold;
 }
 
 a.left {
 	float: left;
-	margin-right: 5px;
-	margin-left: -4;
 }
 
 button {
 	float: right;
+	margin: 5px;
 }
+
 
 table {
 	background: white;
@@ -36,7 +92,6 @@ th {
 	color: black;
 	padding: 0px;
 	text-align: left;
-	line-height: 30px;
 }
 
 th.header {
@@ -46,25 +101,11 @@ th.header {
 
 th.sub {
 	background-color: white;
-	color: black;
 }
 
 td {
 	background-color: #F7F7F7;
 	padding: 0px;
-	line-height: 30px;
-}
-
-td div, th div {
-	border-top: solid 2px white;
-	border-bottom: solid 2px white;
-	padding-left: 2px;
-	line-height: 26px;
-	min-height: 26px;
-}
-
-table table {
-	width: 100%;
 }
 
 input {

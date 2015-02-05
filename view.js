@@ -5,7 +5,7 @@ View = {
 	},
 
 	menu : function() {
-		var html = '\n';
+		var html = '\n<div id="menu">\n';
 
 		var tables = Table.get('tables');
 		for (var i in tables.ids) {
@@ -14,7 +14,7 @@ View = {
 			html += '<a href="#" onclick="View.listDialog(\'' + tables.ids[i] + '\')">' + table.names[1] + '</a> \n';
 		}
 
-		return html;
+		return html + '</div>';
 	},
 
 	listDialog : function(tableName) {
@@ -24,7 +24,8 @@ View = {
 		var rows = this.idsToRows(table, table.ids);
 		html += this.listCommon(table, rows, {
 			editPart : function () {
-				return View.action('+', 'View.editDialog(\'' + table.id + '\')');
+				return View.action('=', 'Controller.showMenu()')
+                                     + View.action('+', 'View.editDialog(\'' + table.id + '\')');
 			},
 			movePart : function(index) {
 				var html = View.action('-', 'Controller.remove(\'' + table.id + '\', ' + rows[index].id + ')');
@@ -40,6 +41,7 @@ View = {
 
 		html += '</form>';
 		document.getElementsByTagName("body")[0].innerHTML = html;
+		document.getElementById("menu").style.display='none';
 	},
 
 	locallist : function (tableName, rows, parentTable, parentKey, parentId)
@@ -188,6 +190,7 @@ console.log("splicing");
 		var idString = row.id ? ',' + row.id : '';
 		html += '</table></form>\n';
 		document.getElementsByTagName("body")[0].innerHTML = html;
+		document.getElementById("menu").style.display='none';
 	},
 
 	entry : function (type, name, value, rootName)
@@ -213,9 +216,11 @@ console.log("splicing");
   		// needs a dynamic implementation to properly escape value
 		var input = document.createElement("input");
 		input.type = type;
-		input.value = value;
 		input.id = rootName + '.' + name;
 		input.name = rootName + '.' + name;
+		var fnark = document.createAttribute('value');
+		fnark.value=value;
+		input.setAttributeNode(fnark);// value = value;
 		var dummy = document.createElement("div");
 		dummy.appendChild(input);
 		return dummy.innerHTML;

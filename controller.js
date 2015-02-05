@@ -105,5 +105,9 @@ console.log("" + val);
 
 		View.edit(tableName, this.collectFormValues(tableName));
 		return false;
+	},
+
+	showMenu : function () {
+		document.getElementById('menu').style.display='block';
 	}
 }
