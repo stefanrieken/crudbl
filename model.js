@@ -30,7 +30,7 @@ var model =
 		value : {name : "Value", type: "string", display : "entry" }
 	},
 	displayName : "{type} : {value}",
-//	local : true // disable this to show all the infos in the main menu
+	local : true // disable this to show all the infos in the main menu
     },
     "infoType" :
     {
