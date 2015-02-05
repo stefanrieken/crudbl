@@ -142,7 +142,7 @@ console.log("splicing");
 
 				var value;
 				if (table.ddl[key].display == 'select') {
-					value = Db.get(table.ddl[key].type, row[key]);
+					value = row[key] ?  Db.get(table.ddl[key].type, row[key]) : undefined;
 					if (value) value = value.name; else value="";
 				} else {
 					value = row[key];
