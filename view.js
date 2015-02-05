@@ -18,17 +18,18 @@ View = {
 	},
 
 	listDialog : function(tableName) {
-		var html = this.menu();
+		var html = this.menu() + '<form>';
 
 		var table = Table.get(tableName);
-		html += this.listCommon(table, table.ids, {
+		var rows = this.idsToRows(table, table.ids);
+		html += this.listCommon(table, rows, {
 			editPart : function () {
-				return '<a href="#" onclick="View.editDialog(\'' + table.id + '\')">[+]</a>\n';
+				return View.action('+', 'View.editDialog(\'' + table.id + '\')');
 			},
-			movePart : function(id) {
-				var html = '<a href="#" onclick="Controller.remove(\'' + table.id + '\', ' + id + ')">[-]</a>'
-				html += '<a href="#" onclick="Controller.moveRootList(-1, \'' + table.id + '\', ' + id + ')">[^]</a>\n';
-				html += '<a href="#" onclick="Controller.moveRootList( 1, \'' + table.id + '\', ' + id + ')">[v]</a>\n';
+			movePart : function(index) {
+				var html = View.action('-', 'Controller.remove(\'' + table.id + '\', ' + rows[index].id + ')');
+				html += View.action('&#8593;', 'Controller.moveRootList(-1, \'' + table.id + '\', ' + index + ')');
+				html += View.action('&#8595;', 'Controller.moveRootList( 1, \'' + table.id + '\', ' + index + ')');
 				return html;
 			},
 			addPart : function() { return ''; },
@@ -37,20 +38,22 @@ View = {
 			}
 		});
 
+		html += '</form>';
 		document.getElementsByTagName("body")[0].innerHTML = html;
 	},
 
-	locallist : function (tableName, ids, parentTable, parentKey, parentId)
+	locallist : function (tableName, rows, parentTable, parentKey, parentId)
 	{
 		var table = Table.get(tableName);
-		return this.listCommon(table, ids, {
+
+		return this.listCommon(table, rows, {
 			editPart : function () {
 				return '&nbsp;';
 			},
-			movePart : function(id) {
-				var html = '<a href="#" onclick="Controller.remove(\'' + tableName + '\', ' + id + ', \'' + parentTable + '\', \'' + parentKey + '\', true)">[-]</a>\n';
-				html += '<a href="#" onclick="Controller.moveChildList(-1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[^]</a>\n';
-				html += '<a href="#" onclick="Controller.moveChildList(1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[v]</a>\n';
+			movePart : function(index) {
+				var html = View.action('-', 'Controller.remove(\'' + tableName + '\', ' + index + ', \'' + parentTable + '\', \'' + parentKey + '\', true)');
+				html += View.action('&#8593;', 'Controller.moveChildList(-1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + index + ')');
+				html += View.action('&#8595;', 'Controller.moveChildList( 1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + index + ')');
 				return html;
 			},
 			addPart : function() {
@@ -58,9 +61,9 @@ View = {
 				for (var key in table.ddl) {
 					if (table.ddl[key].display.indexOf('list') > -1) continue;
 					var input = View[table.ddl[key].display].apply(View, [table.ddl[key].type, key, '', parentKey]);
-					html += '<td>' + input + '</td>';
+					html += '<td><div>' + input + '</div></td>';
 				}
-				html += '<td><a href="#" onclick="Controller.addToLocalList(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')">[+]</a></tr>\n';
+				html += '<td><div>' + View.action('+', 'Controller.addToLocalList(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')') + '</div></td></tr>\n';
 				return html;
 			},
 			rootName : function() {
@@ -69,66 +72,75 @@ View = {
 		});
 	},
 
-	globallist : function (tableName, ids, parentTable, parentKey, parentId)
-	{
-		var table = Table.get(tableName);
-
-		return this.listCommon(table, ids, {
-			editPart : function () {
-				return '&nbsp;';
-			},
-			movePart : function(id) {
-				var html = '<a href="#" onclick="Controller.remove(\'' + tableName + '\', ' + id + ', \'' + parentTable + '\', \'' + parentKey + '\', false)">[-]</a>\n';
-				html += '<a href="#" onclick="Controller.moveChildList(-1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[^]</a>\n';
-				html += '<a href="#" onclick="Controller.moveChildList(1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[v]</a>\n';
-				return html;
-			},
-			addPart : function() {
-				var html = '<tr><td colspan="2">';
-				html += View.select(table.id, parentKey, '', parentTable + '_add');
-				html += '<a href="#" onclick="Controller.addToGlobalList(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')">[+]</a></tr>\n';
-				return html;
-			},
-			rootName : function() {
-				return parentKey;
-			}
-		});
-	},
-
-	listCommon : function (table, ids, callback)
-	{
-		parentTable = false;
-		var html = '<table><tr>';
-		for (var i in table.ddl) {
-			if (table.ddl[i].display.indexOf('list') > -1) continue;
-			html += '<th>' + table.ddl[i].name + '</th>';
-		}
-
-		html += '<th>' + callback.editPart() + '</th></tr>\n';
-		
+	idsToRows : function (table, ids) {
+		var rows = [];
 		var toRemove = [];
 		for (var i in ids) {
-			html += '<tr>';
 			var row = Db.get(table.id, ids[i]);
-
-			// delete dangling reference on sight
-			if (row == null) {
-				 toRemove.push(ids[i]);
-				 continue;
+			if (rows == null) {
+				toRemove.push(ids[i]);
+			} else {
+				rows.push(Db.get(table.id, ids[i]));
 			}
-
-			for (var key in table.ddl) {
-				if (table.ddl[key].display.indexOf('list') > -1) continue;
-				var value = table.ddl[key].display != 'select' ? row[key] : Db.get(table.ddl[key].type, row[key]).name;
-				html += '<td><a href="#" onclick="View.editDialog(\'' + table.id + '\',' + table.ids[i] + ')">' + value + '</a></td>';
-			}
-			html += '<td>' + callback.movePart(ids[i]) + '</td></tr>\n';
 		}
 
 		for (var i in toRemove) {
 console.log("splicing");
 			var id = toRemove[i];
 			ids.splice(ids.indexOf(id), 1);
+		}
+
+		return rows;
+	},
+
+	globallist : function (tableName, ids, parentTable, parentKey, parentId)
+	{
+		var table = Table.get(tableName);
+
+		return this.listCommon(table, this.idsToRows(table, ids), {
+			editPart : function () {
+				return '&nbsp;';
+			},
+			movePart : function(index) {
+				var html = View.action('-', 'Controller.remove(\'' + tableName + '\', ' + index + ', \'' + parentTable + '\', \'' + parentKey + '\', false)');
+				html += View.action('&#8593;', 'Controller.moveChildList(-1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + index + ')');
+				html += View.action('&#8595;', 'Controller.moveChildList( 1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + index + ')');
+				return html;
+			},
+			addPart : function() {
+				var html = '<tr><td colspan="2"><div>';
+				html += View.select(table.id, parentKey, '', parentTable + '_add');
+				html += View.action('+', 'Controller.addToGlobalList(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')');
+				html += '</div></td></tr>';
+				return html;
+			},
+			rootName : function() {
+				return parentKey;
+			}
+		});
+	},
+
+	listCommon : function (table, rows, callback)
+	{
+		parentTable = false;
+		var html = '<table><tr>';
+		for (var i in table.ddl) {
+			if (table.ddl[i].display.indexOf('list') > -1) continue;
+			html += '<th><div>' + table.ddl[i].name + '</div></th>';
+		}
+
+		html += '<th><div>' + callback.editPart() + '</div></th></tr>\n';
+		
+		for (var i in rows) {
+			html += '<tr>';
+			var row = rows[i];
+
+			for (var key in table.ddl) {
+				if (table.ddl[key].display.indexOf('list') > -1) continue;
+				var value = table.ddl[key].display != 'select' ? row[key] : Db.get(table.ddl[key].type, row[key]).name;
+				html += '<td><div><a href="#" onclick="View.editDialog(\'' + table.id + '\',' + table.ids[i] + ')">' + value + '</a></div></td>';
+			}
+			html += '<td><div>' + callback.movePart(i) + '</div></td></tr>\n';
 		}
 
 		html += callback.addPart();
@@ -151,7 +163,8 @@ console.log("splicing");
 		var html = this.menu();
 		html += '<form id="form">\n';
 		if (row.id) html += this.input("hidden", tableName, "id", row.id);
-		html += '<table>\n<tr colspan="2"><th>' + table.names[0] + '</th></tr>\n';
+		html += '<table>\n<tr><th class="header" colspan="2"><div>' + table.names[0] + View.action('&#8592;', 'View.listDialog(\'' + tableName + '\')', 'button left');
+		html += '<button onclick="return Controller.save(\'' + tableName + '\');">Save</button></div></th></tr>\n';
 
 		for (var key in table.ddl)
 		{
@@ -160,7 +173,7 @@ console.log("splicing");
 			if (ddl.display == 'locallist' || ddl.display == 'globallist') {
 				var value=row[key] ? row[key] : [];
 				var listTableName = ddl.type.substring(0, ddl.type.indexOf('list'));
-				html += '<tr><td colspan="2">' + ddl.name + '</th></tr>';
+				html += '<tr><th class="sub" colspan="2"><div>' + ddl.name + '</div></th></tr>';
 				html += '<tr><td colspan="2">' + this[ddl.display].apply(this, [listTableName, value, tableName, key, row.id]);
 				html +=  this.input("hidden", tableName, key, JSON.stringify(value));
 				html += '</td></tr>\n';
@@ -168,13 +181,12 @@ console.log("splicing");
 				var value=row[key] ? row[key] : '';
 				// select applicable function based on data type
 				var input = this[ddl.display].apply(this, [ddl.type, key, value, tableName]);
-				html += '<tr><td>' + ddl.name + '</td><td>' + input + '</td></tr>\n';
+				html += '<tr><td><div>' + ddl.name + '</div></td><td><div>' + input + '</div></td></tr>\n';
 			}
 		}
 
 		var idString = row.id ? ',' + row.id : '';
-		html += '</table><button onclick="return Controller.save(\'' + tableName + '\');">Save</button></form>\n';
-		html += '<a href="#" onclick="View.listDialog(\'' + tableName + '\')">[&lt;-]</a>\n';
+		html += '</table></form>\n';
 		document.getElementsByTagName("body")[0].innerHTML = html;
 	},
 
@@ -198,7 +210,20 @@ console.log("splicing");
 	},
 
 	input : function (type, rootName, name, value) {
-		return '<input type="' + type + '" ' + this.idAndName(rootName, name) + ' value="' + value + '" />';
+  		// needs a dynamic implementation to properly escape value
+		var input = document.createElement("input");
+		input.type = type;
+		input.value = value;
+		input.id = rootName + '.' + name;
+		input.name = rootName + '.' + name;
+		var dummy = document.createElement("div");
+		dummy.appendChild(input);
+		return dummy.innerHTML;
+	},
+
+	action : function (value, action, className) {
+		if (!className) className = "button";
+		return '<a class="' + className + '" href="#" onclick="' + action + '">' + value + '</a>\n';
 	},
 
 	idAndName : function (rootName, name) {

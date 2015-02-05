@@ -9,8 +9,8 @@ var Controller = {
 
 	addToLocalList : function(tableName, parentTable, parentKey) {
 		var dbobj = this.collectFormValues(parentKey);
-		Db.put(tableName, dbobj);
-		this.addCommon(tableName, parentTable, parentKey, dbobj.id);
+//		Db.put(tableName, dbobj);
+		this.addCommon(tableName, parentTable, parentKey, dbobj);
 		return false;
 	},
 
@@ -36,12 +36,12 @@ var Controller = {
 	{
 		var elements = document.getElementById("form").elements;
 		var dbobj = {};
-		for (var i = 0; i < elements.length-1; i++) {
+		for (var i = 0; i < elements.length; i++) {
 			var element = elements[i];
-
 			if (element.name.indexOf(rootName + '.') == 0) {
 				var name = element.name.substring(rootName.length + 1, element.name.length);
 				var value = element.value;
+
 				try {
 					value = JSON.parse(element.value);
 				} catch (e) {
@@ -53,34 +53,36 @@ var Controller = {
 		return dbobj;
 	},
 
-	remove : function (tableName, id, parentTable, parentKey, fromDb)
+	remove : function (tableName, index, parentTable, parentKey, fromDb)
 	{
 		if (confirm('Delete this item?')) {
 			if (parentTable) {
+				var el = document.getElementById(parentTable + '.' + parentKey);
+				var val = el.value ? JSON.parse(el.value) : [];
+				var id = val[index];
 				if (fromDb) {
 					Db.remove(tableName, id);
 				}
-				var el = document.getElementById(parentTable + '.' + parentKey);
-				var val = el.value ? JSON.parse(el.value) : [];
-				val.splice (val.indexOf(id), 1);
+				val.splice (index, 1);
 				el.value = JSON.stringify(val);
 //				var parentobj = this.collectFormValues(parentTable);
 //				Db.put(parentTable, parentobj);
 				View.edit(parentTable, this.collectFormValues(parentTable));
 			} else {
-				Db.remove(tableName, id);
+				// TODO split method in removeFromRoot and fromList.
+				Db.remove(tableName, index); // index == id when called from root
 				View.listDialog(tableName);
 			}
 		}
 		return false;
 	},
 
-	moveRootList : function (amount, tableName, id)
+	moveRootList : function (amount, tableName, index)
 	{
 		var table = Table.get(tableName);
 		var val = table.ids;
-console.log(val);
-		var index = val.indexOf(id);
+
+		var id = val[index];
 		if (index+amount < 0 || index+amount >= val.length) return;
 		val.splice(index, 1);
 		val.splice(index+amount, 0, id);
@@ -89,14 +91,16 @@ console.log(val);
 		return false;
 	},
 
-	moveChildList : function (amount, tableName, rowId, key, id)
+	moveChildList : function (amount, tableName, rowId, key, index)
 	{
 		var el = document.getElementById(tableName + '.' + key);
 		var val = el.value ? JSON.parse(el.value) : [];
-		var index = val.indexOf(id);
+		var id = val[index];
 		if (index+amount < 0 || index+amount >= val.length) return;
+console.log("" + val);
 		val.splice(index, 1);
 		val.splice(index+amount, 0, id);
+console.log("" + val);
 		el.value = JSON.stringify(val);
 
 		View.edit(tableName, this.collectFormValues(tableName));
