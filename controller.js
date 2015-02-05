@@ -53,26 +53,43 @@ var Controller = {
 		return dbobj;
 	},
 
-	remove : function (tableName, id, parentTable, parentKey)
+	remove : function (tableName, id, parentTable, parentKey, fromDb)
 	{
 		if (confirm('Delete this item?')) {
-			Db.remove(tableName, id);
-
 			if (parentTable) {
+				if (fromDb) {
+					Db.remove(tableName, id);
+				}
 				var el = document.getElementById(parentTable + '.' + parentKey);
 				var val = el.value ? JSON.parse(el.value) : [];
 				val.splice (val.indexOf(id), 1);
 				el.value = JSON.stringify(val);
-				var parentobj = this.collectFormValues(parentTable);
-				Db.put(parentTable, parentobj);
-				View.editDialog(parentTable, parentobj.id);
+//				var parentobj = this.collectFormValues(parentTable);
+//				Db.put(parentTable, parentobj);
+				View.edit(parentTable, this.collectFormValues(parentTable));
 			} else {
+				Db.remove(tableName, id);
 				View.listDialog(tableName);
 			}
 		}
 		return false;
 	},
-	move : function (amount, tableName, rowId, key, id)
+
+	moveRootList : function (amount, tableName, id)
+	{
+		var table = Table.get(tableName);
+		var val = table.ids;
+console.log(val);
+		var index = val.indexOf(id);
+		if (index+amount < 0 || index+amount >= val.length) return;
+		val.splice(index, 1);
+		val.splice(index+amount, 0, id);
+		Table.put(table);
+		View.listDialog(tableName);
+		return false;
+	},
+
+	moveChildList : function (amount, tableName, rowId, key, id)
 	{
 		var el = document.getElementById(tableName + '.' + key);
 		var val = el.value ? JSON.parse(el.value) : [];
@@ -82,11 +99,7 @@ var Controller = {
 		val.splice(index+amount, 0, id);
 		el.value = JSON.stringify(val);
 
-		if (tableName == 'tables') {
-			View.listDialog(rowId);
-		} else {
-			View.edit(tableName, this.collectFormValues(tableName));
-		}
+		View.edit(tableName, this.collectFormValues(tableName));
 		return false;
 	}
 }

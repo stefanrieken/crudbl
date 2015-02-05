@@ -5,13 +5,13 @@ View = {
 	},
 
 	menu : function() {
-		var html = '';
+		var html = '\n';
 
 		var tables = Table.get('tables');
 		for (var i in tables.ids) {
 			var table = Table.get(tables.ids[i]);
 			if (table.local) continue;
-			html += '<a href="#" onclick="View.listDialog(\'' + tables.ids[i] + '\')">' + table.names[1] + '</a> ';
+			html += '<a href="#" onclick="View.listDialog(\'' + tables.ids[i] + '\')">' + table.names[1] + '</a> \n';
 		}
 
 		return html;
@@ -23,12 +23,12 @@ View = {
 		var table = Table.get(tableName);
 		html += this.listCommon(table, table.ids, {
 			editPart : function () {
-				return '<a href="#" onclick="View.editDialog(\'' + table.id + '\')">[+]</a>';
+				return '<a href="#" onclick="View.editDialog(\'' + table.id + '\')">[+]</a>\n';
 			},
 			movePart : function(id) {
 				var html = '<a href="#" onclick="Controller.remove(\'' + table.id + '\', ' + id + ')">[-]</a>'
-				html += '<a href="#" onclick="Controller.move(-1, \'tables\', \'' + table.id + '\', \'ids\', ' + id + ')">[^]</a>';
-				html += '<a href="#" onclick="Controller.move( 1, \'tables\', \'' + table.id + '\', \'ids\', ' + id + ')">[v]</a>';
+				html += '<a href="#" onclick="Controller.moveRootList(-1, \'' + table.id + '\', ' + id + ')">[^]</a>\n';
+				html += '<a href="#" onclick="Controller.moveRootList( 1, \'' + table.id + '\', ' + id + ')">[v]</a>\n';
 				return html;
 			},
 			addPart : function() { return ''; },
@@ -48,9 +48,9 @@ View = {
 				return '&nbsp;';
 			},
 			movePart : function(id) {
-				var html = '<a href="#" onclick="Controller.remove(\'' + tableName + '\', ' + id + ', \'' + parentTable + '\', \'' + parentKey + '\')">[-]</a>';
-				html += '<a href="#" onclick="Controller.move(-1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[^]</a>';
-				html += '<a href="#" onclick="Controller.move(1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[v]</a>';
+				var html = '<a href="#" onclick="Controller.remove(\'' + tableName + '\', ' + id + ', \'' + parentTable + '\', \'' + parentKey + '\', true)">[-]</a>\n';
+				html += '<a href="#" onclick="Controller.moveChildList(-1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[^]</a>\n';
+				html += '<a href="#" onclick="Controller.moveChildList(1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[v]</a>\n';
 				return html;
 			},
 			addPart : function() {
@@ -60,7 +60,7 @@ View = {
 					var input = View[table.ddl[key].display].apply(View, [table.ddl[key].type, key, '', parentKey]);
 					html += '<td>' + input + '</td>';
 				}
-				html += '<td><a href="#" onclick="Controller.addToLocalList(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')">[+]</a></tr>';
+				html += '<td><a href="#" onclick="Controller.addToLocalList(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')">[+]</a></tr>\n';
 				return html;
 			},
 			rootName : function() {
@@ -78,15 +78,15 @@ View = {
 				return '&nbsp;';
 			},
 			movePart : function(id) {
-				var html = '<a href="#" onclick="Controller.remove(\'' + tableName + '\', ' + id + ', \'' + parentTable + '\', \'' + parentKey + '\')">[-]</a>';
-				html += '<a href="#" onclick="Controller.move(-1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[^]</a>';
-				html += '<a href="#" onclick="Controller.move(1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[v]</a>';
+				var html = '<a href="#" onclick="Controller.remove(\'' + tableName + '\', ' + id + ', \'' + parentTable + '\', \'' + parentKey + '\', false)">[-]</a>\n';
+				html += '<a href="#" onclick="Controller.moveChildList(-1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[^]</a>\n';
+				html += '<a href="#" onclick="Controller.moveChildList(1, \'' + parentTable + '\', \'' + parentId + '\', \'' + parentKey + '\', ' + id + ')">[v]</a>\n';
 				return html;
 			},
 			addPart : function() {
 				var html = '<tr><td colspan="2">';
 				html += View.select(table.id, parentKey, '', parentTable + '_add');
-				html += '<a href="#" onclick="Controller.addToGlobalList(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')">[+]</a></tr>';
+				html += '<a href="#" onclick="Controller.addToGlobalList(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')">[+]</a></tr>\n';
 				return html;
 			},
 			rootName : function() {
@@ -104,7 +104,7 @@ View = {
 			html += '<th>' + table.ddl[i].name + '</th>';
 		}
 
-		html += '<th>' + callback.editPart() + '</th></tr>';
+		html += '<th>' + callback.editPart() + '</th></tr>\n';
 		
 		var toRemove = [];
 		for (var i in ids) {
@@ -122,10 +122,11 @@ View = {
 				var value = table.ddl[key].display != 'select' ? row[key] : Db.get(table.ddl[key].type, row[key]).name;
 				html += '<td><a href="#" onclick="View.editDialog(\'' + table.id + '\',' + table.ids[i] + ')">' + value + '</a></td>';
 			}
-			html += '<td>' + callback.movePart(ids[i]) + '</td></tr>';
+			html += '<td>' + callback.movePart(ids[i]) + '</td></tr>\n';
 		}
 
 		for (var i in toRemove) {
+console.log("splicing");
 			var id = toRemove[i];
 			ids.splice(ids.indexOf(id), 1);
 		}
@@ -148,9 +149,9 @@ View = {
 		var table = Table.get(tableName);
 
 		var html = this.menu();
-		html += '<form id="form">';
+		html += '<form id="form">\n';
 		if (row.id) html += this.input("hidden", tableName, "id", row.id);
-		html += '<table><tr colspan="2"><th>' + name + '</th></tr>';
+		html += '<table>\n<tr colspan="2"><th>' + table.names[0] + '</th></tr>\n';
 
 		for (var key in table.ddl)
 		{
@@ -162,18 +163,18 @@ View = {
 				html += '<tr><td colspan="2">' + ddl.name + '</th></tr>';
 				html += '<tr><td colspan="2">' + this[ddl.display].apply(this, [listTableName, value, tableName, key, row.id]);
 				html +=  this.input("hidden", tableName, key, JSON.stringify(value));
-				html += '</td></tr>';
+				html += '</td></tr>\n';
 			} else {
 				var value=row[key] ? row[key] : '';
 				// select applicable function based on data type
 				var input = this[ddl.display].apply(this, [ddl.type, key, value, tableName]);
-				html += '<tr><td>' + ddl.name + '</td><td>' + input + '</td></tr>';
+				html += '<tr><td>' + ddl.name + '</td><td>' + input + '</td></tr>\n';
 			}
 		}
 
 		var idString = row.id ? ',' + row.id : '';
-		html += '</table><button onclick="return Controller.save(\'' + tableName + '\');">Save</button></form>';
-		html += '<a href="#" onclick="View.listDialog(\'' + tableName + '\')">[&lt;-]</a>';
+		html += '</table><button onclick="return Controller.save(\'' + tableName + '\');">Save</button></form>\n';
+		html += '<a href="#" onclick="View.listDialog(\'' + tableName + '\')">[&lt;-]</a>\n';
 		document.getElementsByTagName("body")[0].innerHTML = html;
 	},
 
@@ -185,15 +186,15 @@ View = {
 	select : function (tableName, name, value, rootName)
 	{
                 var table = Table.get(tableName);
-		var result = '<select ' + this.idAndName(rootName, name) + '>';
+		var result = '<select ' + this.idAndName(rootName, name) + '>\n';
 		for (var i in table.ids) {
 			var row = Db.get(tableName, table.ids[i]);
 			var thisValue = row.name; // ddl.displayName ? 'todo' : row.name;
 			var selected = thisValue == value ? ' selected="true"' : '';
-			result += '<option value="' + row.id + '"' + selected + '>' + thisValue +'</option>';
+			result += '<option value="' + row.id + '"' + selected + '>' + thisValue +'</option>\n';
 		}
 
-		return result + '</select>';
+		return result + '</select>\n';
 	},
 
 	input : function (type, rootName, name, value) {
