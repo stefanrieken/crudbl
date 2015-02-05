@@ -145,12 +145,13 @@ console.log("splicing");
 					value = row[key] ?  Db.get(table.ddl[key].type, row[key]) : undefined;
 					if (value) value = value.name; else value="";
 				} else {
-					value = row[key];
+					value = row[key] ? row[key] : '';
 				}
 
-				html += '<td><div><a href="#" onclick="View.editDialog(\'' + table.id + '\',' + table.ids[i] + ')">' + value + '</a></div></td>';
+				if (row.id) value = '<a href="#" onclick="View.editDialog(\'' + table.id + '\',' + table.ids[i] + ')">' + value + '</a>';
+				html += '<td><div>' + value+ '</td>';
 			}
-			html += '<td><div>' + callback.movePart(i) + '</div></td></tr>\n';
+			html += '<td class="movePart"><div>' + callback.movePart(i) + '</div></td></tr>\n';
 		}
 
 		html += callback.addPart();
@@ -213,11 +214,15 @@ console.log("splicing");
 		for (var i in table.ids) {
 			var row = Db.get(tableName, table.ids[i]);
 			var thisValue = row.name; // ddl.displayName ? 'todo' : row.name;
-			var selected = thisValue == value ? ' selected="true"' : '';
+console.log(thisValue);
+console.log(value);
+			var selected = row.id == value ? ' selected="true"' : '';
 			result += '<option value="' + row.id + '"' + selected + '>' + thisValue +'</option>\n';
 		}
 
-		return result + '</select>\n';
+		result += '</select>\n';
+		if (value) result += View.action('&#8594;', 'View.editDialog(\'' + tableName + '\', ' + value + ')');
+		return result;
 	},
 
 	input : function (type, rootName, name, value) {

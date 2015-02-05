@@ -16,6 +16,10 @@ a.button, td div, th div {
 	min-height: 36px;
 }
 
+.movePart {
+	width: 120px;
+}
+
 #menu a {
 	height: 40px;
 	line-height: 40px;
