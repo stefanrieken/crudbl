@@ -116,6 +116,10 @@ input {
 	width: 100%;
 }
 
+input[type=date] {
+	width: 150px;
+}
+
 body {
 	font-family: "Arial";
 }

@@ -8,6 +8,7 @@ var model =
 		name : {name : "Name", type : "string", display : "entry" },
 		hiveType :  {name : "Type", type : "hiveType", display : "select" },
 		beeType :  {name : "Bee type", type : "beeType", display : "select" },
+		queenDate :  {name : "Queen date", type : "string", display : "date" },
 		frames : {name : "Frames", type : "string", display : "entry"},
 		logEntries : {name : "Log entries", type : "logEntrylist", display : "locallist" }
 	},
@@ -46,7 +47,7 @@ var model =
 	names : ["Log entry", "Log entries", "Log entries"],
 	ddl :
 	{
-		name : {name : "Date", type : "string", display : "entry"},
+		name : {name : "Date", type : "string", display : "date"},
 		entry : {name : "Entry", type : "string", display : "entry"},
 	},
 	local : true // disable this to show all the infos in the main menu

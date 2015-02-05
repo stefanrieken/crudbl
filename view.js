@@ -126,18 +126,22 @@ console.log("splicing");
 	{
 		parentTable = false;
 		var html = '<table><tr>';
+		var counter=0;
 		for (var i in table.ddl) {
+			if (++counter > 4) continue; // limit list width
 			if (table.ddl[i].display.indexOf('list') > -1) continue;
 			html += '<th><div>' + table.ddl[i].name + '</div></th>';
 		}
 
 		html += '<th><div>' + callback.editPart() + '</div></th></tr>\n';
-		
+
 		for (var i in rows) {
 			html += '<tr>';
 			var row = rows[i];
 
+			var counter=0;
 			for (var key in table.ddl) {
+				if (++counter > 4) continue; // limit list width
 				if (table.ddl[key].display.indexOf('list') > -1) continue;
 
 				var value;
@@ -205,6 +209,11 @@ console.log("splicing");
 	entry : function (type, name, value, rootName)
 	{
 		return this.input ("text", rootName, name, value);
+	},
+
+	date : function (type, name, value, rootName)
+	{
+		return this.input ("date", rootName, name, value);
 	},
 
 	select : function (tableName, name, value, rootName)
