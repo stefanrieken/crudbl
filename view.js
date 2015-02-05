@@ -139,7 +139,15 @@ console.log("splicing");
 
 			for (var key in table.ddl) {
 				if (table.ddl[key].display.indexOf('list') > -1) continue;
-				var value = table.ddl[key].display != 'select' ? row[key] : Db.get(table.ddl[key].type, row[key]).name;
+
+				var value;
+				if (table.ddl[key].display == 'select') {
+					value = Db.get(table.ddl[key].type, row[key]);
+					if (value) value = value.name; else value="";
+				} else {
+					value = row[key];
+				}
+
 				html += '<td><div><a href="#" onclick="View.editDialog(\'' + table.id + '\',' + table.ids[i] + ')">' + value + '</a></div></td>';
 			}
 			html += '<td><div>' + callback.movePart(i) + '</div></td></tr>\n';
