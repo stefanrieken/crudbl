@@ -11,6 +11,8 @@ will remain permanent within your browser.
 
 Next steps:
 
+- Prevent locally declared list items from dangling when object is not saved
+
 - Adding CSS
 
 - Packing for mobile use

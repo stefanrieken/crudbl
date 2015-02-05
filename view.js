@@ -60,7 +60,7 @@ View = {
 					var input = View[table.ddl[key].display].apply(View, [table.ddl[key].type, key, '', parentKey]);
 					html += '<td>' + input + '</td>';
 				}
-				html += '<td><a href="#" onclick="Controller.addToParent(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')">[+]</a></tr>';
+				html += '<td><a href="#" onclick="Controller.addToLocalList(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')">[+]</a></tr>';
 				return html;
 			},
 			rootName : function() {
@@ -85,8 +85,8 @@ View = {
 			},
 			addPart : function() {
 				var html = '<tr><td colspan="2">';
-				html += View.select(table.id, 'add_' + parentKey, '', parentTable);
-				html += '<a href="#" onclick="Controller.addExisting(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')">[+]</a></tr>';
+				html += View.select(table.id, parentKey, '', parentTable + '_add');
+				html += '<a href="#" onclick="Controller.addToGlobalList(\'' + table.id + '\', \'' + parentTable + '\', \'' + parentKey + '\')">[+]</a></tr>';
 				return html;
 			},
 			rootName : function() {
@@ -105,16 +105,29 @@ View = {
 		}
 
 		html += '<th>' + callback.editPart() + '</th></tr>';
-
+		
+		var toRemove = [];
 		for (var i in ids) {
 			html += '<tr>';
 			var row = Db.get(table.id, ids[i]);
+
+			// delete dangling reference on sight
+			if (row == null) {
+				 toRemove.push(ids[i]);
+				 continue;
+			}
+
 			for (var key in table.ddl) {
 				if (table.ddl[key].display.indexOf('list') > -1) continue;
 				var value = table.ddl[key].display != 'select' ? row[key] : Db.get(table.ddl[key].type, row[key]).name;
 				html += '<td><a href="#" onclick="View.editDialog(\'' + table.id + '\',' + table.ids[i] + ')">' + value + '</a></td>';
 			}
 			html += '<td>' + callback.movePart(ids[i]) + '</td></tr>';
+		}
+
+		for (var i in toRemove) {
+			var id = toRemove[i];
+			ids.splice(ids.indexOf(id), 1);
 		}
 
 		html += callback.addPart();
@@ -127,9 +140,16 @@ View = {
 		var table = Table.get(tableName);
 		var row = id ? Db.get(tableName, id) : {};
 
+		this.edit(tableName, row);
+	},
+
+	edit : function (tableName, row)
+	{
+		var table = Table.get(tableName);
+
 		var html = this.menu();
 		html += '<form id="form">';
-		if (id) html += this.input("hidden", tableName, "id", id);
+		if (row.id) html += this.input("hidden", tableName, "id", row.id);
 		html += '<table><tr colspan="2"><th>' + name + '</th></tr>';
 
 		for (var key in table.ddl)
@@ -140,8 +160,8 @@ View = {
 				var value=row[key] ? row[key] : [];
 				var listTableName = ddl.type.substring(0, ddl.type.indexOf('list'));
 				html += '<tr><td colspan="2">' + ddl.name + '</th></tr>';
-				html += '<tr><td colspan="2">' + this.input("hidden", tableName, key, JSON.stringify(value));
-				html += this[ddl.display].apply(this, [listTableName, value, tableName, key, id]);
+				html += '<tr><td colspan="2">' + this[ddl.display].apply(this, [listTableName, value, tableName, key, row.id]);
+				html +=  this.input("hidden", tableName, key, JSON.stringify(value));
 				html += '</td></tr>';
 			} else {
 				var value=row[key] ? row[key] : '';
@@ -151,7 +171,7 @@ View = {
 			}
 		}
 
-		var idString = id ? ',' + id : '';
+		var idString = row.id ? ',' + row.id : '';
 		html += '</table><button onclick="return Controller.save(\'' + tableName + '\');">Save</button></form>';
 		html += '<a href="#" onclick="View.listDialog(\'' + tableName + '\')">[&lt;-]</a>';
 		document.getElementsByTagName("body")[0].innerHTML = html;
