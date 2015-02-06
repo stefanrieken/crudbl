@@ -30,8 +30,10 @@ var model =
 	ddl :
 	{
 		name : {name : "Name", type : "string", display : "entry"},
-		height : {name : "Height", type : "string", display : "entry"},
 		width : {name : "Width", type : "string", display : "entry"},
+		broodHeight : {name : "Height (brood)", type : "string", display : "entry"},
+		honeyHeight : {name : "Height (honey)", type : "string", display : "entry"},
+		ear : {name : "Ear", type : "string", display : "entry"},
 	}
     },
     "beeType" :
@@ -54,32 +56,36 @@ var model =
     },
 };
 
-localStorage.clear();
+//localStorage.clear();
 
-for (var i in model) {
-console.log("Putting " + i);
-        model[i].id = i;
-        Table.put(model[i]);
+if (!Db.get('tables', 'beehives')) {
+	localStorage.clear();
+
+	for (var i in model) {
+		console.log("Putting " + i);
+		model[i].id = i;
+		Table.put(model[i]);
+	}
+
+	var simplexFrameSize = {name : 'Simplex',  width : '360', broodHeight : '218', honeyHeight : '140', ear : '37.5'};
+	var dadantFrameSize = {name : 'Dadant-Blatt', width : '435', broodHeight : '300', honeyHeight : '160', ear : '17.5'};
+	var miniPlusFrameSize = {name : 'Mini-Plus', width : '218', broodHeight : '159', honeyHeight : '', ear : '15'};
+
+	Db.put('frameSize', {name : 'n/a'});
+	Db.put('frameSize', simplexFrameSize);
+	Db.put('frameSize', dadantFrameSize);
+	Db.put('frameSize', miniPlusFrameSize);
+
+	Db.put('beeType', {name : 'Black'});
+	Db.put('beeType', {name : 'Buckfast'});
+	Db.put('beeType', {name : 'Carnica'});
+	Db.put('beeType', {name : 'Killer'});
+	Db.put('beeType', {name : 'Wild'});
+
+	Db.put('hiveType', {name : 'Warre'});
+	Db.put('hiveType', {name : 'Zesramer', frames: '6', frameSize : simplexFrameSize.id });
+	Db.put('hiveType', {name : 'Spaarkast', frames: '10', frameSize : simplexFrameSize.id });
+	Db.put('hiveType', {name : 'Simplex', frames: '10', frameSize : simplexFrameSize.id });
+	Db.put('hiveType', {name : 'Dadant-Blatt', frames: 11, frameSize : dadantFrameSize.id});
+	Db.put('hiveType', {name : 'Mini-Plus', frames: 6, frameSize : miniPlusFrameSize.id});
 }
-
-var simplexFrameSize = {name : 'Simplex', height : '10', width : '10'};
-var dadantFrameSize = {name : 'Simplex', height : '10', width : '10'};
-
-Db.put('frameSize', {name : 'n/a'});
-Db.put('frameSize', simplexFrameSize);
-Db.put('frameSize', dadantFrameSize);
-
-Db.put('beeType', {name : 'Black'});
-Db.put('beeType', {name : 'Buckfast'});
-Db.put('beeType', {name : 'Carnica'});
-Db.put('beeType', {name : 'Killer'});
-Db.put('beeType', {name : 'Wild'});
-
-Db.put('hiveType', {name : 'Warre'});
-Db.put('hiveType', {name : 'Zesramer', frames: '6', frameSize : simplexFrameSize.id });
-Db.put('hiveType', {name : 'Spaarkast', frames: '10', frameSize : simplexFrameSize.id });
-Db.put('hiveType', {name : 'Simplex', frames: '10', frameSize : simplexFrameSize.id });
-Db.put('hiveType', {name : 'Langstroth'});
-Db.put('hiveType', {name : 'Dadant', frameSize : dadantFrameSize.id });
-
-

@@ -1,6 +1,6 @@
 /* limit size to likely mobile phone resolution */
 
-#menu, table {
+#menu, #menu a, table {
 	width: 100%;
 	max-width: 480px;
 }
@@ -21,8 +21,8 @@ a.button, td div, th div {
 }
 
 #menu a {
-	height: 40px;
-	line-height: 40px;
+	height: 80px;
+	line-height: 80px;
 }
 
 input, select {
@@ -30,11 +30,14 @@ input, select {
 }
 
 td div, th div {
-	border-top: solid 2px white;
-	border-bottom: solid 2px white;
+	border-bottom: solid 4px white;
 }
 
 /* relative paddings and margins */
+
+body {
+	margin: 0px;
+}
 
 td div, th div {
 	padding-left: 5px;
@@ -48,14 +51,21 @@ a.left {
 
 /* menu */
 
+html, body {
+	height: 100%;
+}
+
 #menu {
 	position: absolute;
+	height: 100%;
+	background-color: black;
 }
 
 #menu a {
 	display: block;
 	background-color: black;
 	color: white;
+	font-size: x-large;
 	text-align: center;
 	font-weight: bold;
 }
@@ -117,7 +127,7 @@ input {
 }
 
 input[type=date] {
-	width: 150px;
+	width: 120px;
 }
 
 body {

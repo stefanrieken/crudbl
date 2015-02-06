@@ -9,7 +9,6 @@ var Controller = {
 
 	addToLocalList : function(tableName, parentTable, parentKey) {
 		var dbobj = this.collectFormValues(parentKey);
-//		Db.put(tableName, dbobj);
 		this.addCommon(tableName, parentTable, parentKey, dbobj);
 		return false;
 	},
@@ -65,8 +64,6 @@ var Controller = {
 				}
 				val.splice (index, 1);
 				el.value = JSON.stringify(val);
-//				var parentobj = this.collectFormValues(parentTable);
-//				Db.put(parentTable, parentobj);
 				View.edit(parentTable, this.collectFormValues(parentTable));
 			} else {
 				// TODO split method in removeFromRoot and fromList.
@@ -97,10 +94,8 @@ var Controller = {
 		var val = el.value ? JSON.parse(el.value) : [];
 		var id = val[index];
 		if (index+amount < 0 || index+amount >= val.length) return;
-console.log("" + val);
 		val.splice(index, 1);
 		val.splice(index+amount, 0, id);
-console.log("" + val);
 		el.value = JSON.stringify(val);
 
 		View.edit(tableName, this.collectFormValues(tableName));

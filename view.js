@@ -24,7 +24,7 @@ View = {
 		var rows = this.idsToRows(table, table.ids);
 		html += this.listCommon(table, rows, {
 			editPart : function () {
-				return View.action('=', 'Controller.showMenu()')
+				return View.action('&equiv;', 'Controller.showMenu()')
                                      + View.action('+', 'View.editDialog(\'' + table.id + '\')');
 			},
 			movePart : function(index) {
@@ -128,7 +128,7 @@ console.log("splicing");
 		var html = '<table><tr>';
 		var counter=0;
 		for (var i in table.ddl) {
-			if (++counter > 4) continue; // limit list width
+			if (++counter > 3) continue; // limit list width
 			if (table.ddl[i].display.indexOf('list') > -1) continue;
 			html += '<th><div>' + table.ddl[i].name + '</div></th>';
 		}
@@ -141,7 +141,7 @@ console.log("splicing");
 
 			var counter=0;
 			for (var key in table.ddl) {
-				if (++counter > 4) continue; // limit list width
+				if (++counter > 3) continue; // limit list width
 				if (table.ddl[key].display.indexOf('list') > -1) continue;
 
 				var value;

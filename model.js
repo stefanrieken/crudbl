@@ -52,18 +52,21 @@ var model =
 
 localStorage.clear();
 
-for (var i in model) {
-console.log("Putting " + i);
-        model[i].id = i;
-        Table.put(model[i]);
+if (!Db.get('tables', 'contacts')) {
+	localStorage.clear();
+
+	for (var i in model) {
+		console.log("Putting " + i);
+		model[i].id = i;
+		Table.put(model[i]);
+	}
+
+	Db.put('contactType', {name : 'Home'});
+	Db.put('contactType', {name : 'Office'});
+
+	Db.put('infoType', {name : 'Phone'});
+	Db.put('infoType', {name : 'Email'});
+
+	Db.put('company', {name : '42'});
+	Db.put('company', {name : 'Prepend'});
 }
-
-Db.put('contactType', {name : 'Home'});
-Db.put('contactType', {name : 'Office'});
-
-Db.put('infoType', {name : 'Phone'});
-Db.put('infoType', {name : 'Email'});
-
-Db.put('company', {name : '42'});
-Db.put('company', {name : 'Prepend'});
-
