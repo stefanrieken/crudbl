@@ -1,19 +1,38 @@
-/* limit size to likely mobile phone resolution */
+/* responsive */
 
-#menu, #menu a, table {
-	width: 100%;
-	max-width: 480px;
+@media (max-width: 600px) {
+	th:nth-child(n+5):not(.editPart),
+	td:nth-child(n+5):not(.movePart) {
+		display: none;
+	}
+}
+
+@media (max-width: 480px) {
+	th:nth-child(n+4):not(.editPart),
+	td:nth-child(n+4):not(.movePart) {
+		display: none;
+	}
+}
+
+@media (max-width: 360px) {
+	th:nth-child(n+3):not(.editPart),
+	td:nth-child(n+3):not(.movePart) {
+		display: none;
+	}
 }
 
 /* uniform size of rows and buttons */
 
 a.button {
 	width: 36px;
-}
-
-a.button, td div, th div {
 	line-height: 36px;
 	min-height: 36px;
+}
+
+td, th {
+	vertical-align: middle;
+	height: 36px;
+	border-bottom: solid 4px white;
 }
 
 .movePart {
@@ -23,14 +42,6 @@ a.button, td div, th div {
 #menu a {
 	height: 80px;
 	line-height: 80px;
-}
-
-input, select {
-	margin-top: 6px;
-}
-
-td div, th div {
-	border-bottom: solid 4px white;
 }
 
 /* relative paddings and margins */
@@ -53,6 +64,10 @@ a.left {
 
 html, body {
 	height: 100%;
+}
+
+#menu, #menu a, table {
+	width: 100%;
 }
 
 #menu {
@@ -111,6 +126,7 @@ th {
 th.header {
 	background-color: black;
 	color: white;
+	line-height: 36px;
 }
 
 th.sub {

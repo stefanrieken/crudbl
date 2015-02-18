@@ -128,12 +128,12 @@ console.log("splicing");
 		var html = '<table><tr>';
 		var counter=0;
 		for (var i in table.ddl) {
-			if (++counter > 3) continue; // limit list width
+//			if (++counter > 3) continue; // limit list width
 			if (table.ddl[i].display.indexOf('list') > -1) continue;
 			html += '<th><div>' + table.ddl[i].name + '</div></th>';
 		}
 
-		html += '<th><div>' + callback.editPart() + '</div></th></tr>\n';
+		html += '<th class="editPart"><div>' + callback.editPart() + '</div></th></tr>\n';
 
 		for (var i in rows) {
 			html += '<tr>';
@@ -141,7 +141,7 @@ console.log("splicing");
 
 			var counter=0;
 			for (var key in table.ddl) {
-				if (++counter > 3) continue; // limit list width
+//				if (++counter > 3) continue; // limit list width
 				if (table.ddl[key].display.indexOf('list') > -1) continue;
 
 				var value;
@@ -194,7 +194,7 @@ console.log("splicing");
 				html += '</td></tr>\n';
 			} else {
 				var value=row[key] ? row[key] : '';
-				// select applicable function based on data type
+				// select applicable function based on display type
 				var input = this[ddl.display].apply(this, [ddl.type, key, value, tableName]);
 				html += '<tr><td><div>' + ddl.name + '</div></td><td><div>' + input + '</div></td></tr>\n';
 			}
@@ -216,6 +216,11 @@ console.log("splicing");
 		return this.input ("date", rootName, name, value);
 	},
 
+	number : function (type, name, value, rootName)
+	{
+		return this.input ("number", rootName, name, value);
+	},
+
 	select : function (tableName, name, value, rootName)
 	{
                 var table = Table.get(tableName);
@@ -223,8 +228,6 @@ console.log("splicing");
 		for (var i in table.ids) {
 			var row = Db.get(tableName, table.ids[i]);
 			var thisValue = row.name; // ddl.displayName ? 'todo' : row.name;
-console.log(thisValue);
-console.log(value);
 			var selected = row.id == value ? ' selected="true"' : '';
 			result += '<option value="' + row.id + '"' + selected + '>' + thisValue +'</option>\n';
 		}

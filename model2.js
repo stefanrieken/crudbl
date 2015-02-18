@@ -9,7 +9,7 @@ var model =
 		hiveType :  {name : "Type", type : "hiveType", display : "select" },
 		beeType :  {name : "Bee type", type : "beeType", display : "select" },
 		queenDate :  {name : "Queen date", type : "string", display : "date" },
-		frames : {name : "Frames", type : "string", display : "entry"},
+		frames : {name : "Frames", type : "string", display : "number"},
 		logEntries : {name : "Log entries", type : "logEntrylist", display : "locallist" }
 	},
 	displayName : "{lastName}, {firstName}" // doesn't do anything yet
@@ -20,8 +20,8 @@ var model =
 	ddl :
 	{
 		name : {name : "Type", type : "string", display : "entry"},
-		frames : {name : "Frames", type : "string", display : "entry"},
-		frameSize : {name : "Frame size", type : "frameSize", display : "select"}
+		frames : {name : "Frames", type : "string", display : "number"},
+		frameSize : {name : "Frame size", type : "frameSize", display : "number"}
 	}
     },
     "frameSize" :
@@ -30,10 +30,10 @@ var model =
 	ddl :
 	{
 		name : {name : "Name", type : "string", display : "entry"},
-		width : {name : "Width", type : "string", display : "entry"},
-		broodHeight : {name : "Height (brood)", type : "string", display : "entry"},
-		honeyHeight : {name : "Height (honey)", type : "string", display : "entry"},
-		ear : {name : "Ear", type : "string", display : "entry"},
+		width : {name : "Width", type : "string", display : "number"},
+		broodHeight : {name : "Height (brood)", type : "string", display : "number"},
+		honeyHeight : {name : "Height (honey)", type : "string", display : "number"},
+		ear : {name : "Ear", type : "string", display : "number"},
 	}
     },
     "beeType" :
