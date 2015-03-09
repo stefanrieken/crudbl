@@ -59,8 +59,6 @@ var Table =
 
 var Db =
 {
-    listeners : [],
-
     // If no item.id is defined, it is assumed a numerical should be added.
     put : function (table, item)
     {
@@ -102,5 +100,5 @@ var Db =
     toId : function (item)
     {
         if (item.id) return item.id; else return item;
-    },
+    }
 };
