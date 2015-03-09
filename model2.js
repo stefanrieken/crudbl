@@ -21,7 +21,7 @@ var model =
 	{
 		name : {name : "Type", type : "string", display : "entry"},
 		frames : {name : "Frames", type : "string", display : "number"},
-		frameSize : {name : "Frame size", type : "frameSize", display : "number"}
+		frameSize : {name : "Frame size", type : "frameSize", display : "select"}
 	}
     },
     "frameSize" :
@@ -33,7 +33,7 @@ var model =
 		width : {name : "Width", type : "string", display : "number"},
 		broodHeight : {name : "Height (brood)", type : "string", display : "number"},
 		honeyHeight : {name : "Height (honey)", type : "string", display : "number"},
-		ear : {name : "Ear", type : "string", display : "number"},
+		ear : {name : "Ear size", type : "string", display : "number"},
 	}
     },
     "beeType" :
