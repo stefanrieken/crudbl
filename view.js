@@ -87,7 +87,6 @@ View = {
 		}
 
 		for (var i in toRemove) {
-console.log("splicing");
 			var id = toRemove[i];
 			ids.splice(ids.indexOf(id), 1);
 		}
@@ -128,7 +127,7 @@ console.log("splicing");
 		var html = '<table><tr>';
 		var counter=0;
 		for (var i in table.ddl) {
-//			if (++counter > 3) continue; // limit list width
+
 			if (table.ddl[i].display.indexOf('list') > -1) continue;
 			html += '<th><div>' + table.ddl[i].name + '</div></th>';
 		}
@@ -141,7 +140,6 @@ console.log("splicing");
 
 			var counter=0;
 			for (var key in table.ddl) {
-//				if (++counter > 3) continue; // limit list width
 				if (table.ddl[key].display.indexOf('list') > -1) continue;
 
 				var value;

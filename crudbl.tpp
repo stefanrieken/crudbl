@@ -3,21 +3,26 @@
 --date March 10th, 2015
 --huge CruDBl
 In-browser storage database
+              & CRUD dialog generator
 
 --newpage
 --heading (New) things to explore !
 ---
 
-o Native app development
+o 'Native' app development
+---
+  - Not with my eee pc !
 ---
 
-o Responsive JS front-end development
+o Responsive CSS 
+---
+
+o JS front-end development
 ---
 
 o Local browser storage
 ---
-
-o EU Cookie directive / NL Cookiewet ?
+  - Privacy implications ?
 
 --newpage
 --heading In-browser storage: types & support
@@ -44,18 +49,21 @@ o Store any (string / stringified) data by key
 o For an infinite time
 ---
 
-o Easily set up as backend in HTML-based smartphone apps
+o Easily stored as app data in HTML / JS based smartphone apps
 ---
 
 --boldon
 = Ideal database for HTML / JS app !
 --boldoff
+---
+
+  -> Easy to develop !
 
 --newpage
 --heading DB: Structuring data
 ---
 
-o Only store JSON objects
+o Store JSON objects
 ---
 
 o Link to table object for meta info
