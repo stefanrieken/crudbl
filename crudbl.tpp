@@ -20,7 +20,7 @@ o Responsive CSS
 o JS front-end development
 ---
 
-o Local browser storage
+o In-browser storage
 ---
   - Privacy implications ?
 
@@ -121,7 +121,7 @@ o Generate view based on model
   - Use fancy input types (date, numeric) where possible
 ---
 
-o Handle actions in controller
+o Handle event-based actions in controller
 ---
   - Because otherwise it's not MVC
 ---
